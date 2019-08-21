@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>To Do List</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="https://kit.fontawesome.com/0c46b2ba58.js"></script>	
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+</head>
+<body>
+
+	<div class="container">
+		<input type="text" class="txtb" id="newTask" placeholder="Add a task">
+
+		<h3> Not Completed</h3>
+
+		<div class="notcomp" id="notComp">
+			<div class="task displayNone" id="task">
+				<span>task</span>
+				<i class="fas fa-trash-alt"></i>
+				<i class="fas fa-check"></i>
+			</div>	
+
+		</div>
+
+		<h3>Completed</h3>
+
+		<div class="comp" id="comp">
+					
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		/*I created a version with only js*/
+		/* Important: when we clone a node, its listeners doesn't cloned */
+		document.getElementById("newTask").addEventListener("keydown", function(e){
+			
+			if (e.keyCode == 13 && e.target.value.trim() != "") {				
+				var newTask = document.getElementById("task").cloneNode(true);
+				newTask.removeAttribute('id');
+				newTask.classList.remove("displayNone");
+
+				newTask.children[0].innerText = e.target.value;
+				e.target.value = "";
+
+				/*Add a listener to trash icon for delete this task*/
+				newTask.children[1].addEventListener("click",function(){
+					var task = this.parentNode;
+					task.parentNode.removeChild(task);
+				})
+
+				/*Add a listener to check icon for to move this task to task completed list*/
+				newTask.children[2].addEventListener("click",function(){
+					var task = this.parentNode;
+					var taskComp = task.cloneNode(true);
+					/*Delete check icon because we don't need it anymore in task completed list*/
+					taskComp.removeChild(taskComp.children[2]);
+					/*Add a listener to trash icon for delete this task*/
+					taskComp.children[1].addEventListener("click",function(){
+						var task = this.parentNode;
+						task.parentNode.removeChild(task);
+					})
+					/*Add a completed task to task completed list*/
+					document.getElementById("comp").appendChild(taskComp);
+					task.parentNode.removeChild(task);
+				})
+
+				/*Add a new task to task not completed list*/				
+				document.getElementById("notComp").appendChild(newTask);
+			}			
+		})
+	</script>
+		
+
+</body>
+</html>
